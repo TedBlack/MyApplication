@@ -2,7 +2,9 @@ package com.example.tadeu.myapplication;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
@@ -19,12 +21,13 @@ public class HistoryActivity extends AppCompatActivity {
 
         TextView textView = new TextView(this);
 
+        textView.setMovementMethod(new ScrollingMovementMethod());
         BufferedReader reader = null;
         try {
             reader = new BufferedReader(new InputStreamReader(getAssets().open("history.txt")));
             String line;
             while ((line = reader.readLine())!=null){
-                textView.setText(line);
+                textView.append(line+"\n");
             }
         }
         catch (IOException error){
@@ -43,9 +46,13 @@ public class HistoryActivity extends AppCompatActivity {
 
 
 
-
-
         ViewGroup layout = (ViewGroup) findViewById(R.id.activity_history);
+
+        if(layout.canScrollVertically(1)){
+            layout.setVerticalScrollBarEnabled(true);
+            layout.setScrollbarFadingEnabled(false);
+        }
         layout.addView(textView);
+
     }
 }

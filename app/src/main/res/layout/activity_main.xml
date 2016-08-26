@@ -16,6 +16,8 @@
         android:layout_marginTop="10dp"
         android:textSize="30dp"/>
     <Button
+        style="@android:style/Animation"
+        android:background="@drawable/button"
         android:layout_alignBottom="@+id/button"
         android:layout_alignTop="@+id/button"
         android:id = "@+id/events"
@@ -29,6 +31,7 @@
         android:layout_alignParentBottom="true"/>
 
     <Button
+        android:background="@drawable/button"
         android:id="@+id/button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -36,6 +39,7 @@
         android:onClick="historyMessage"
         android:layout_alignParentBottom="true"/>
     <Button
+        android:background="@drawable/button"
         android:id="@+id/group"
         android:gravity="center"
         android:textAlignment="gravity"
