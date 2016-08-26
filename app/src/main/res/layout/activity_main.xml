@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal"
+    android:background="@mipmap/jobapp2"
+    android:id="@+id/activity_main">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/happyText"
+        android:textColor="@android:color/primary_text_dark"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:textSize="30dp"/>
+    <Button
+        android:layout_alignBottom="@+id/button"
+        android:layout_alignTop="@+id/button"
+        android:id = "@+id/events"
+        android:gravity="center"
+        android:textAlignment="gravity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/eventButton"
+        android:onClick="eventButton"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"/>
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/button_hist"
+        android:onClick="historyMessage"
+        android:layout_alignParentBottom="true"/>
+    <Button
+        android:id="@+id/group"
+        android:gravity="center"
+        android:textAlignment="gravity"
+        android:layout_alignBottom="@+id/button"
+        android:layout_alignTop="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerInParent="true"
+        android:text="@string/groupButton"
+        android:onClick="groupButton"/>
+</RelativeLayout>

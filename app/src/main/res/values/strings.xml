@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Job 15 years</string>
+    <string name="happyText">Happy Birthday Job</string>
+    <string name="button_hist">Group\nHistory</string>
+    <string name="eventButton">Events</string>
+    <string name="groupButton">Group</string>
+    <string name="element">César Freitas\nElemento do grupo à 15 anos\n É um dos velhinhos ;)</string>
+</resources>
