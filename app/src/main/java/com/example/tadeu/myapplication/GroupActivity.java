@@ -3,7 +3,7 @@ package com.example.tadeu.myapplication;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-public class GroupActivity extends AppCompatActivity {
+public class GroupActivity extends MainActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

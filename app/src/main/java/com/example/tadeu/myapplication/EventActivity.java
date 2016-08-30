@@ -13,7 +13,7 @@ import android.widget.Toast;
 import java.util.Calendar;
 
 
-public class EventActivity extends AppCompatActivity {
+public class EventActivity extends MainActivity {
 
     CalendarView calendarView;
 

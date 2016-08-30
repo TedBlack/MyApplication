@@ -5,4 +5,9 @@
     <string name="eventButton">Eventos</string>
     <string name="groupButton">Grupo</string>
     <string name="element">César Freitas\nElemento do grupo à 15 anos\n É um dos velhinhos ;)</string>
+    <string name="about">Sobre</string>
+    <string name="help">Ajuda</string>
+    <string name="exit">Sair</string>
+    <string name="aboutText">Aplicação desenvolvida em comemoração dos 15 anos de vida do JOb, para mais informações visitem facebook.com/job.jovensoliveira ou envie-nos um email para jovens.oliveira@gmail.com</string>
+    <string name="helpText">Telefona para o 112.</string>
 </resources>

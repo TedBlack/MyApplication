@@ -4,6 +4,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -12,7 +13,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-public class HistoryActivity extends AppCompatActivity {
+public class HistoryActivity extends MainActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,11 +48,6 @@ public class HistoryActivity extends AppCompatActivity {
 
 
         ViewGroup layout = (ViewGroup) findViewById(R.id.activity_history);
-
-        if(layout.canScrollVertically(1)){
-            layout.setVerticalScrollBarEnabled(true);
-            layout.setScrollbarFadingEnabled(false);
-        }
         layout.addView(textView);
 
     }
