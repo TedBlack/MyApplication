@@ -1,22 +1,17 @@
 package com.example.tadeu.myapplication;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.Process;
-import android.provider.Settings;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -55,23 +50,36 @@ public class MainActivity extends AppCompatActivity {
                 groupButton(v);
             }
         });
+
+        final ImageButton seedButton = (ImageButton) findViewById(R.id.seed);
+        seedButton.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v){
+                seedButton(v);
+            }
+        });
     }
 
     public void historyMessage(View view){
         Intent intent = new Intent(this, HistoryActivity.class);
-        intent.putExtra(EXTRA_MESSAGE, message);
+        //intent.putExtra(EXTRA_MESSAGE, message);
         startActivity(intent);
 
     }
 
     public void eventButton(View view){
         Intent intent = new Intent(this, EventActivity.class);
-        intent.putExtra(EXTRA_MESSAGE, message);
+        //intent.putExtra(EXTRA_MESSAGE, message);
         startActivity(intent);
     }
 
     public void groupButton(View view){
         Intent intent = new Intent(this, GroupActivity.class);
+        //intent.putExtra(EXTRA_MESSAGE, message);
+        startActivity(intent);
+    }
+
+    public void seedButton(View view){
+        Intent intent = new Intent(this, SeedActivity.class);
         intent.putExtra(EXTRA_MESSAGE, message);
         startActivity(intent);
     }

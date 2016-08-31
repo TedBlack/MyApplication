@@ -3,7 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".GroupActivity">
+    tools:context=".GroupActivity"
+    android:background="@color/navy_blue">
 
     <ViewFlipper
         android:id="@+id/view_flipper"
@@ -22,10 +23,10 @@
             <TextView
                 android:id="@+id/imageText"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:textColor="@color/black"
-                android:shadowColor="@color/white"
-                android:textSize="20dp"/>
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:textSize="20dp"
+                android:background="@color/navy_blue"/>
         </RelativeLayout>
     </ViewFlipper>
 </RelativeLayout>
