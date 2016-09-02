@@ -3,6 +3,7 @@ package com.example.tadeu.myapplication;
 import android.app.usage.UsageEvents;
 import android.content.Intent;
 import android.graphics.Color;
+import android.provider.CalendarContract;
 import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -21,6 +22,9 @@ public class EventActivity extends MainActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event);
+
+
+
         /*
         Calendar cal = Calendar.getInstance();
         Intent intent = new Intent(Intent.ACTION_EDIT);
