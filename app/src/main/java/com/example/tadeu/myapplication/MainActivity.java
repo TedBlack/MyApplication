@@ -191,11 +191,10 @@ class DownloadFile extends AsyncTask<String, Integer, String> {
         }
 
         String filename = "calendar.ics";
-        /*File aux = new File(context.getFilesDir()+filename);
-        try {
-            if (aux.exists()){
-                aux.delete();
-            }
+        //String filename = "irule.ics";
+        File aux = new File(context.getFilesDir()+"calendar.ics");
+        //File aux = new File(context.getFilesDir()+filename);
+        /*try {
             aux.createNewFile();
         } catch (IOException e) {
             e.printStackTrace();
