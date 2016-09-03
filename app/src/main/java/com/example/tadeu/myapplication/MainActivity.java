@@ -1,11 +1,16 @@
 package com.example.tadeu.myapplication;
 
 import android.app.Dialog;
+import android.content.ComponentName;
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.StrictMode;
+import android.provider.CalendarContract;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -17,9 +22,15 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 
+import net.fortuna.ical4j.data.CalendarBuilder;
+import net.fortuna.ical4j.model.Component;
+import net.fortuna.ical4j.model.TimeZone;
+import net.fortuna.ical4j.model.TimeZoneRegistry;
+
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -29,6 +40,10 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Iterator;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -87,6 +102,8 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    private static final SimpleDateFormat SDF = new SimpleDateFormat("yyyyMMdd");
+
     public void eventButton(View view) throws Exception {
 
         String website = "https://calendar.google.com/calendar/ical/ijuh72fq0otnvo5edesmj72" +
@@ -96,19 +113,41 @@ public class MainActivity extends AppCompatActivity {
 
         dlFile.doInBackground(website);
 
-        Intent calendarIntent = new Intent(Intent.ACTION_EDIT);
-        calendarIntent.setType("vnd.android.cursor.item/event");
+        Intent calendarIntent = new Intent();
+        ComponentName componentName = new ComponentName("com.google.android.calendar", "com.android.calendar.LaunchActivity");
+        calendarIntent.setComponent(componentName);
 
-        //calendarIntent.putExtra("title", "Title");
-        //calendarIntent.putExtra("beginTime", startTimeMillis);
-        //calendarIntent.putExtra("endTime", endTimeMillis);
-        //calendarIntent.putExtra("description", "Description");
-        //Intent intent = new Intent(this, EventActivity.class);
-        //intent.putExtra(EXTRA_MESSAGE, message);
+        FileInputStream calendarFile = new FileInputStream(getFilesDir()+"calendar.ics");
+        CalendarBuilder builder = new CalendarBuilder();
+        net.fortuna.ical4j.model.Calendar calendar = builder.build(calendarFile);
+
+        TimeZoneRegistry registry = builder.getRegistry();
+        TimeZone timeZone = registry.getTimeZone("Europe/Lisbon");
+
+        ContentValues event = new ContentValues();
+        ContentResolver cr = this.getContentResolver();
+
+        for(Iterator events = calendar.getComponents().iterator(); events.hasNext();){
+
+            Component component = (Component) events.next();
+
+            Long start = SDF.parse(component.getProperty("DTSTART").getValue()).getTime();
+            Long end = SDF.parse(component.getProperty("DTEND").getValue()).getTime();
+            String summary = component.getProperty("SUMMARY").getValue();
+            String description = component.getProperty("DESCRIPTION").getValue();
+            event.put("calendar_id", 1);
+            event.put("title", summary);
+            event.put("dtstart", start);
+            event.put("dtend", end);
+            event.put("description", description);
+            event.put(CalendarContract.Events.EVENT_TIMEZONE, timeZone.getDisplayName());
+
+            cr.insert(Uri.parse("content://com.android.calendar/events"), event);
+        }
+
         startActivity(calendarIntent);
+
     }
-
-
 
     public void groupButton(View view){
         Intent intent = new Intent(this, GroupActivity.class);
@@ -174,76 +213,3 @@ public class MainActivity extends AppCompatActivity {
     }
 }
 
-class DownloadFile extends AsyncTask<String, Integer, String> {
-
-    private Context context;
-
-    public DownloadFile(Context context){
-        this.context = context;
-    }
-
-
-    protected String doInBackground(String... sUrl) {
-
-        if (android.os.Build.VERSION.SDK_INT > 9) {
-            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-            StrictMode.setThreadPolicy(policy);
-        }
-
-        String filename = "calendar.ics";
-        //String filename = "irule.ics";
-        File aux = new File(context.getFilesDir()+"calendar.ics");
-        //File aux = new File(context.getFilesDir()+filename);
-        /*try {
-            aux.createNewFile();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }*/
-
-        InputStream input = null;
-        OutputStream output = null;
-        HttpURLConnection connection = null;
-        try {
-            URL url = new URL(sUrl[0]);
-            connection = (HttpURLConnection) url.openConnection();
-            connection.connect();
-
-            // expect HTTP 200 OK, so we don't mistakenly save error report
-            // instead of the file
-            if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
-                return "Server returned HTTP " + connection.getResponseCode()
-                        + " " + connection.getResponseMessage();
-            }
-
-            // this will be useful to display download percentage
-            // might be -1: server did not report the length
-            int fileLength = connection.getContentLength();
-
-            // download the file
-            input = connection.getInputStream();
-            output = new FileOutputStream(context.getFilesDir()+filename);
-
-            byte data[] = new byte[4096];
-            long total = 0;
-            int count;
-            while ((count = input.read(data)) != -1) {
-                output.write(data, 0, count);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (output != null)
-                    output.close();
-                if (input != null)
-                    input.close();
-            } catch (IOException ignored) {
-            }
-
-            if (connection != null)
-                connection.disconnect();
-        }
-        Log.i("Fim", "Cheguei ao fim");
-        return null;
-    }
-}
