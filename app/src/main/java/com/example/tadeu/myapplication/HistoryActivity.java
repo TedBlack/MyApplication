@@ -1,13 +1,23 @@
 package com.example.tadeu.myapplication;
 
+import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Layout;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
+
+import org.w3c.dom.Text;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -20,9 +30,10 @@ public class HistoryActivity extends MainActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history);
 
-        TextView textView = new TextView(this);
+        TextView textView = (TextView) this.findViewById(R.id.historyText);
 
-        textView.setMovementMethod(new ScrollingMovementMethod());
+
+
         BufferedReader reader = null;
         try {
             reader = new BufferedReader(new InputStreamReader(getAssets().open("history.txt")));
@@ -43,12 +54,7 @@ public class HistoryActivity extends MainActivity {
                 }
 
             }
+
         }
-
-
-
-        ViewGroup layout = (ViewGroup) findViewById(R.id.activity_history);
-        layout.addView(textView);
-
     }
 }

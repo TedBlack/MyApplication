@@ -9,4 +9,7 @@
     <string name="exit">Sair</string>
     <string name="aboutText">Aplicação desenvolvida em comemoração dos 15 anos de vida do JOb, para mais informações visitem facebook.com/job.jovensoliveira ou envie-nos um email para jovens.oliveira@gmail.com</string>
     <string name="helpText">Telefona para o 112.</string>
+    <string name="titleInternet">Acessibilidade</string>
+    <string name="internet">Para usar esta função é necessário uma conexão segura à Internet. Por favor ligue o wi-fi ou os dados móveis.</string>
+    <string name="definitions">Definições</string>
 </resources>

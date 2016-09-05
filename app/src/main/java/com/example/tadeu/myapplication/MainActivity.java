@@ -3,14 +3,19 @@ package com.example.tadeu.myapplication;
 import android.app.Dialog;
 import android.content.ComponentName;
 import android.content.ContentResolver;
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.StrictMode;
 import android.provider.CalendarContract;
+import android.provider.Settings;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -27,22 +32,8 @@ import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.TimeZone;
 import net.fortuna.ical4j.model.TimeZoneRegistry;
 
-import java.io.BufferedInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLConnection;
-import java.nio.channels.Channels;
-import java.nio.channels.ReadableByteChannel;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.Iterator;
 
 public class MainActivity extends AppCompatActivity {
@@ -106,47 +97,62 @@ public class MainActivity extends AppCompatActivity {
 
     public void eventButton(View view) throws Exception {
 
-        String website = "https://calendar.google.com/calendar/ical/ijuh72fq0otnvo5edesmj72" +
-                "fag%40group.calendar.google.com/public/basic.ics";
-
-        DownloadFile dlFile = new DownloadFile(this);
-
-        dlFile.doInBackground(website);
-
-        Intent calendarIntent = new Intent();
-        ComponentName componentName = new ComponentName("com.google.android.calendar", "com.android.calendar.LaunchActivity");
-        calendarIntent.setComponent(componentName);
-
-        FileInputStream calendarFile = new FileInputStream(getFilesDir()+"calendar.ics");
-        CalendarBuilder builder = new CalendarBuilder();
-        net.fortuna.ical4j.model.Calendar calendar = builder.build(calendarFile);
-
-        TimeZoneRegistry registry = builder.getRegistry();
-        TimeZone timeZone = registry.getTimeZone("Europe/Lisbon");
-
-        ContentValues event = new ContentValues();
-        ContentResolver cr = this.getContentResolver();
-
-        for(Iterator events = calendar.getComponents().iterator(); events.hasNext();){
-
-            Component component = (Component) events.next();
-
-            Long start = SDF.parse(component.getProperty("DTSTART").getValue()).getTime();
-            Long end = SDF.parse(component.getProperty("DTEND").getValue()).getTime();
-            String summary = component.getProperty("SUMMARY").getValue();
-            String description = component.getProperty("DESCRIPTION").getValue();
-            event.put("calendar_id", 1);
-            event.put("title", summary);
-            event.put("dtstart", start);
-            event.put("dtend", end);
-            event.put("description", description);
-            event.put(CalendarContract.Events.EVENT_TIMEZONE, timeZone.getDisplayName());
-
-            cr.insert(Uri.parse("content://com.android.calendar/events"), event);
+        if(!verifyCon()){
+            connDialog().show();
         }
+        else {
+            String website = "https://calendar.google.com/calendar/ical/ijuh72fq0otnvo5edesmj72" +
+                    "fag%40group.calendar.google.com/public/basic.ics";
 
-        startActivity(calendarIntent);
+            DownloadFile dlFile = new DownloadFile(this);
 
+            dlFile.doInBackground(website);
+
+            Intent calendarIntent = new Intent();
+            ComponentName componentName = new ComponentName("com.google.android.calendar", "com.android.calendar.LaunchActivity");
+            calendarIntent.setComponent(componentName);
+
+            FileInputStream calendarFile = new FileInputStream(getFilesDir() + "calendar.ics");
+            CalendarBuilder builder = new CalendarBuilder();
+            net.fortuna.ical4j.model.Calendar calendar = builder.build(calendarFile);
+
+            TimeZoneRegistry registry = builder.getRegistry();
+            TimeZone timeZone = registry.getTimeZone("Europe/Lisbon");
+
+            ContentValues event = new ContentValues();
+            ContentResolver cr = this.getContentResolver();
+
+            for (Iterator events = calendar.getComponents().iterator(); events.hasNext(); ) {
+
+                Component component = (Component) events.next();
+
+                Long start = SDF.parse(component.getProperty("DTSTART").getValue()).getTime();
+                Long end = SDF.parse(component.getProperty("DTEND").getValue()).getTime();
+                String summary = component.getProperty("SUMMARY").getValue();
+                String description = component.getProperty("DESCRIPTION").getValue();
+                String UID = component.getProperty("UID").getValue();
+
+                event.put("calendar_id", 1);
+                event.put("title", summary);
+                event.put("dtstart", start);
+                event.put("dtend", end);
+                event.put("description", description);
+                event.put(CalendarContract.Events.EVENT_TIMEZONE, timeZone.getDisplayName());
+                event.put(CalendarContract.Events.UID_2445, UID);
+                if (verifyEvent(UID, this))
+                    cr.insert(Uri.parse("content://com.android.calendar/events"), event);
+                else
+                    cr.insert(Uri.parse("content://com.android.calendar/events"), event);
+            }
+
+            startActivity(calendarIntent);
+        }
+    }
+
+    private boolean verifyCon(){
+        ConnectivityManager cm = (ConnectivityManager) this.getSystemService(this.CONNECTIVITY_SERVICE);
+        NetworkInfo ni = cm.getActiveNetworkInfo();
+        return ni!=null && ni.isConnectedOrConnecting();
     }
 
     public void groupButton(View view){
@@ -199,6 +205,24 @@ public class MainActivity extends AppCompatActivity {
         return build.create();
     }
 
+    public Dialog connDialog(){
+        AlertDialog.Builder build = new AlertDialog.Builder(this);
+        build.setTitle(R.string.titleInternet);
+        build.setMessage(R.string.internet);
+        build.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+        build.setNegativeButton(R.string.definitions, new DialogInterface.OnClickListener(){
+            public void onClick(DialogInterface dialog, int which) {
+                startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
+            }
+        });
+        return build.create();
+    }
+
     public Dialog helpDialog(){
         AlertDialog.Builder build = new AlertDialog.Builder(this);
         build.setTitle(R.string.help);
@@ -210,6 +234,27 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         return build.create();
+    }
+
+    private boolean verifyEvent(String eventID, Context context){
+        Uri uri = Uri.parse("content://com.android.calendar/events");
+        Cursor cursor = context.getContentResolver().query( uri, null, null, null, null);
+        cursor.moveToFirst();
+        String uid;
+        int id;
+        for(int myCursor = 0; myCursor< cursor.getCount(); myCursor++) {
+            uid = cursor.getString(cursor.getColumnIndex(CalendarContract.Events.UID_2445));
+            id = cursor.getInt(cursor.getColumnIndex(CalendarContract.Events._ID));
+            if (uid!=null && uid.equals(eventID)) {
+                Uri deleteUri = ContentUris.withAppendedId(uri, id);
+                context.getContentResolver().delete(deleteUri, null, null);
+                cursor.close();
+                return true;
+            }
+            cursor.moveToNext();
+        }
+        cursor.close();
+        return false;
     }
 }
 

@@ -9,4 +9,7 @@
     <string name="exit">Exit</string>
     <string name="aboutText">App developed in comemoration of the 15 year anniversary of JOb group.\nFor more information visit facebook.com/job.jovensoliveira or send us an email at jovens.oliveira@gmail.com</string>
     <string name="helpText">Call 911.</string>
+    <string name="titleInternet">Acessibility</string>
+    <string name="internet">To use this feature you need a stable connection to the Internet. Please turn on the wi-fi or mobile data.</string>
+    <string name="definitions">Definitions</string>
 </resources>
