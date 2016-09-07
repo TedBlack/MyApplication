@@ -17,9 +17,9 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
             android:id="@+id/firstGroup"
-            android:layout_alignParentLeft="true"
-            android:src="@mipmap/i18"/>
+            android:src="@mipmap/text"/>
         <TextView
             android:layout_below="@+id/firstGroup"
             android:id="@+id/historyText"

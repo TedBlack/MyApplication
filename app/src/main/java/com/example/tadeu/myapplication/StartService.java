@@ -70,7 +70,7 @@ public class StartService extends Service{
                 }
             }
             NotificationCompat.Builder notification = new NotificationCompat.Builder(context);
-            notification.setSmallIcon(R.mipmap.ic_launcher);
+            notification.setSmallIcon(R.mipmap.icon);
             Date date= new Date();
             Calendar cal = Calendar.getInstance();
             cal.setTime(date);
