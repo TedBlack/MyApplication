@@ -64,4 +64,21 @@
         android:background="@drawable/button"
         android:layout_marginBottom="5dp"
         android:onClick="seedButton"/>
+    <Button
+        android:id="@+id/prayers"
+        android:text="@string/prayers"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/button"
+        android:onClick="prayerButton"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="50dp"/>
+    <Button
+        android:id="@+id/songs"
+        android:text="@string/songs"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/button"
+        android:onClick="songButton"
+        android:layout_marginTop="50dp"/>
 </RelativeLayout>

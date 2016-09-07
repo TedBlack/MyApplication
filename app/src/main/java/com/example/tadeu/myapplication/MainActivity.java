@@ -1,25 +1,17 @@
 package com.example.tadeu.myapplication;
 
+import android.app.AlarmManager;
 import android.app.Dialog;
+import android.app.PendingIntent;
 import android.content.ComponentName;
-import android.content.ContentResolver;
-import android.content.ContentUris;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.net.Uri;
-import android.os.AsyncTask;
-import android.os.StrictMode;
-import android.provider.CalendarContract;
+
 import android.provider.Settings;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -27,19 +19,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 
-import net.fortuna.ical4j.data.CalendarBuilder;
-import net.fortuna.ical4j.model.Component;
-import net.fortuna.ical4j.model.TimeZone;
-import net.fortuna.ical4j.model.TimeZoneRegistry;
-
-import java.io.FileInputStream;
-import java.text.SimpleDateFormat;
-import java.util.Iterator;
 
 public class MainActivity extends AppCompatActivity {
 
-    public final static String EXTRA_MESSAGE = "Hello!! Is it me you looking for??";
-    String message;
+
+    private AlarmManager manager;
+    private PendingIntent intent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +35,14 @@ public class MainActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        message = getIntent().getStringExtra(MainActivity.EXTRA_MESSAGE);
+
+        startService(new Intent(this, StartService.class));
+
+        Intent alarmIntent = new Intent(this, BootStart.class);
+        intent = PendingIntent.getBroadcast(this, 0, alarmIntent, 0);
+
+        startAlarm();
+
 
         Button myButton = (Button) findViewById(R.id.button);
         myButton.setOnClickListener(new View.OnClickListener() {
@@ -63,11 +55,7 @@ public class MainActivity extends AppCompatActivity {
         final Button eventButton = (Button) findViewById(R.id.events);
         eventButton.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
-                try {
-                    eventButton(v);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                eventButton(v);
             }
         });
 
@@ -84,86 +72,70 @@ public class MainActivity extends AppCompatActivity {
                 seedButton(v);
             }
         });
+
+        final Button prayerButton = (Button) findViewById(R.id.prayers);
+        prayerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                prayerButton(v);
+            }
+        });
+
+        final Button songButton = (Button) findViewById(R.id.songs);
+        songButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+    }
+
+    public void startAlarm() {
+        manager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+        int interval = 10000;
+        manager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), interval, intent);
+    }
+
+    public void songButton(View view){
+        Intent intent = new Intent(this, SongActivity.class);
+        startActivity(intent);
+    }
+
+    public void prayerButton(View view){
+        Intent intent = new Intent(this, PrayerActivity.class);
+        startActivity(intent);
     }
 
     public void historyMessage(View view){
         Intent intent = new Intent(this, HistoryActivity.class);
-        //intent.putExtra(EXTRA_MESSAGE, message);
         startActivity(intent);
-
     }
 
-    private static final SimpleDateFormat SDF = new SimpleDateFormat("yyyyMMdd");
+    public void eventButton(View view) {
 
-    public void eventButton(View view) throws Exception {
-
-        if(!verifyCon()){
+        if(!InsertEvents.verifyCon(this)){
             connDialog().show();
         }
         else {
-            String website = "https://calendar.google.com/calendar/ical/ijuh72fq0otnvo5edesmj72" +
-                    "fag%40group.calendar.google.com/public/basic.ics";
-
-            DownloadFile dlFile = new DownloadFile(this);
-
-            dlFile.doInBackground(website);
-
             Intent calendarIntent = new Intent();
             ComponentName componentName = new ComponentName("com.google.android.calendar", "com.android.calendar.LaunchActivity");
             calendarIntent.setComponent(componentName);
-
-            FileInputStream calendarFile = new FileInputStream(getFilesDir() + "calendar.ics");
-            CalendarBuilder builder = new CalendarBuilder();
-            net.fortuna.ical4j.model.Calendar calendar = builder.build(calendarFile);
-
-            TimeZoneRegistry registry = builder.getRegistry();
-            TimeZone timeZone = registry.getTimeZone("Europe/Lisbon");
-
-            ContentValues event = new ContentValues();
-            ContentResolver cr = this.getContentResolver();
-
-            for (Iterator events = calendar.getComponents().iterator(); events.hasNext(); ) {
-
-                Component component = (Component) events.next();
-
-                Long start = SDF.parse(component.getProperty("DTSTART").getValue()).getTime();
-                Long end = SDF.parse(component.getProperty("DTEND").getValue()).getTime();
-                String summary = component.getProperty("SUMMARY").getValue();
-                String description = component.getProperty("DESCRIPTION").getValue();
-                String UID = component.getProperty("UID").getValue();
-
-                event.put("calendar_id", 1);
-                event.put("title", summary);
-                event.put("dtstart", start);
-                event.put("dtend", end);
-                event.put("description", description);
-                event.put(CalendarContract.Events.EVENT_TIMEZONE, timeZone.getDisplayName());
-                event.put(CalendarContract.Events.UID_2445, UID);
-                if (verifyEvent(UID, this))
-                    cr.insert(Uri.parse("content://com.android.calendar/events"), event);
-                else
-                    cr.insert(Uri.parse("content://com.android.calendar/events"), event);
+            try {
+                InsertEvents.insertEvents(this);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-
             startActivity(calendarIntent);
         }
     }
 
-    private boolean verifyCon(){
-        ConnectivityManager cm = (ConnectivityManager) this.getSystemService(this.CONNECTIVITY_SERVICE);
-        NetworkInfo ni = cm.getActiveNetworkInfo();
-        return ni!=null && ni.isConnectedOrConnecting();
-    }
-
     public void groupButton(View view){
         Intent intent = new Intent(this, GroupActivity.class);
-        //intent.putExtra(EXTRA_MESSAGE, message);
         startActivity(intent);
     }
 
     public void seedButton(View view){
         Intent intent = new Intent(this, SeedActivity.class);
-        intent.putExtra(EXTRA_MESSAGE, message);
         startActivity(intent);
     }
 
@@ -234,27 +206,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         return build.create();
-    }
-
-    private boolean verifyEvent(String eventID, Context context){
-        Uri uri = Uri.parse("content://com.android.calendar/events");
-        Cursor cursor = context.getContentResolver().query( uri, null, null, null, null);
-        cursor.moveToFirst();
-        String uid;
-        int id;
-        for(int myCursor = 0; myCursor< cursor.getCount(); myCursor++) {
-            uid = cursor.getString(cursor.getColumnIndex(CalendarContract.Events.UID_2445));
-            id = cursor.getInt(cursor.getColumnIndex(CalendarContract.Events._ID));
-            if (uid!=null && uid.equals(eventID)) {
-                Uri deleteUri = ContentUris.withAppendedId(uri, id);
-                context.getContentResolver().delete(deleteUri, null, null);
-                cursor.close();
-                return true;
-            }
-            cursor.moveToNext();
-        }
-        cursor.close();
-        return false;
     }
 }
 
