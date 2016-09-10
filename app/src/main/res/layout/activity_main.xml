@@ -15,42 +15,49 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp"
         android:textSize="30dp"/>
-    <Button
+    <ImageButton
         style="@android:style/Animation"
-        android:background="@drawable/button"
-        android:layout_alignBottom="@+id/button"
-        android:layout_alignTop="@+id/button"
+        android:background="@color/transparent"
         android:id = "@+id/events"
         android:gravity="center"
         android:textAlignment="gravity"
-        android:layout_width="wrap_content"
+        android:layout_width="80dp"
         android:layout_height="wrap_content"
-        android:text="@string/eventButton"
+        android:layout_toRightOf="@+id/group"
+        android:layout_marginLeft="20dp"
+        android:scaleType="fitCenter"
+        android:src="@mipmap/event"
         android:onClick="eventButton"
-        android:layout_alignParentRight="true"
+        android:layout_marginBottom="5dp"
         android:layout_alignParentBottom="true"/>
 
-    <Button
-        android:background="@drawable/button"
+    <ImageButton
+        android:layout_marginBottom="5dp"
+        android:background="@color/transparent"
         android:id="@+id/button"
-        android:layout_width="wrap_content"
+        android:layout_width="80dp"
         android:layout_height="wrap_content"
         android:text="@string/button_hist"
-        android:onClick="historyMessage"
+        android:src="@mipmap/history"
+        android:scaleType="center"
+        android:layout_marginRight="20dp"
+        android:layout_toLeftOf="@+id/group"
         android:layout_alignParentBottom="true"/>
-    <Button
+
+    <ImageButton
+        android:layout_marginBottom="5dp"
         android:background="@drawable/button"
         android:id="@+id/group"
         android:gravity="center"
-        android:textAlignment="gravity"
         android:layout_alignBottom="@+id/button"
         android:layout_alignTop="@+id/button"
-        android:layout_width="wrap_content"
+        android:layout_width="80dp"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerInParent="true"
-        android:text="@string/groupButton"
-        android:onClick="groupButton"/>
+        android:src="@mipmap/group3"
+        android:onClick="groupButton"
+        android:scaleType="fitCenter"/>
 
     <ImageButton
         android:id="@+id/seed"
@@ -64,21 +71,4 @@
         android:background="@drawable/button"
         android:layout_marginBottom="5dp"
         android:onClick="seedButton"/>
-    <Button
-        android:id="@+id/prayers"
-        android:text="@string/prayers"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/button"
-        android:onClick="prayerButton"
-        android:layout_alignParentRight="true"
-        android:layout_marginTop="50dp"/>
-    <Button
-        android:id="@+id/songs"
-        android:text="@string/songs"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/button"
-        android:onClick="songButton"
-        android:layout_marginTop="50dp"/>
 </RelativeLayout>

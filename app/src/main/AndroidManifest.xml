@@ -44,6 +44,8 @@
         <activity android:name=".GroupActivity" android:screenOrientation="portrait"/>
         <activity android:name=".SeedActivity" android:screenOrientation="portrait"/>
         <activity android:name=".PrayerActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".SongActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".SongDisplay" android:screenOrientation="portrait"/>
         <service android:name=".StartService" android:enabled="true" android:exported="true"/>
     </application>
 

@@ -1,21 +1,27 @@
 package com.example.tadeu.myapplication;
 
+import android.Manifest;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.provider.CalendarContract;
+import android.support.v4.app.ActivityCompat;
 
 import net.fortuna.ical4j.data.CalendarBuilder;
+import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.TimeZone;
 import net.fortuna.ical4j.model.TimeZoneRegistry;
+import net.fortuna.ical4j.model.property.Method;
 
 import java.io.FileInputStream;
+import java.net.URI;
 import java.text.SimpleDateFormat;
 import java.util.Iterator;
 
@@ -26,14 +32,13 @@ public class InsertEvents {
 
     private static final SimpleDateFormat SDF = new SimpleDateFormat("yyyyMMdd");
 
-    public static void insertEvents(Context context) throws Exception{
+    public static void insertEvents(Context context) throws Exception {
         String website = "https://calendar.google.com/calendar/ical/ijuh72fq0otnvo5edesmj72" +
                 "fag%40group.calendar.google.com/public/basic.ics";
 
         DownloadFile dlFile = new DownloadFile(context);
 
         dlFile.doInBackground(website);
-
 
 
         FileInputStream calendarFile = new FileInputStream(context.getFilesDir() + "calendar.ics");
@@ -61,12 +66,40 @@ public class InsertEvents {
             event.put("dtstart", start);
             event.put("dtend", end);
             event.put("description", description);
-            event.put(CalendarContract.Events.EVENT_TIMEZONE, timeZone.getDisplayName());
+            event.put(CalendarContract.Events.EVENT_TIMEZONE, TimeZone.getDefault().getID());
             event.put(CalendarContract.Events.UID_2445, UID);
-            if (verifyEvent(UID, context))
-                cr.insert(Uri.parse("content://com.android.calendar/events"), event);
-            else
-                cr.insert(Uri.parse("content://com.android.calendar/events"), event);
+            event.put(CalendarContract.Events.ALL_DAY, true);
+            event.put(CalendarContract.Events.HAS_ALARM, true);
+            Uri uri;
+
+            if (ActivityCompat.checkSelfPermission(context, Manifest.permission.WRITE_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
+                // TODO: Consider calling
+                //    ActivityCompat#requestPermissions
+                // here to request the missing permissions, and then overriding
+                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                //                                          int[] grantResults)
+                // to handle the case where the user grants the permission. See the documentation
+                // for ActivityCompat#requestPermissions for more details.
+                return;
+            }
+
+            if (verifyEvent(UID, context)) {
+                //cr.insert(Uri.parse("content://com.android.calendar/events"), event);
+                uri = cr.insert(CalendarContract.Events.CONTENT_URI, event);
+            }
+            else {
+                uri = cr.insert(CalendarContract.Events.CONTENT_URI, event);
+                //cr.insert(Uri.parse("content://com.android.calendar/events"), event);
+            }
+
+            long eventId = Long.parseLong(uri.getLastPathSegment());
+
+            ContentValues reminders = new ContentValues();
+            reminders.put(CalendarContract.Reminders.EVENT_ID, eventId);
+            reminders.put(CalendarContract.Reminders.METHOD, CalendarContract.Reminders.METHOD_ALERT);
+            reminders.put(CalendarContract.Reminders.MINUTES,5760-60*12);
+
+            cr.insert(CalendarContract.Reminders.CONTENT_URI, reminders);
         }
 
 

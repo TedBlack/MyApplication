@@ -1,9 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <item android:id="@+id/about"
-        android:title="@string/about"></item>
+        android:title="@string/about"/>
     <item android:id="@+id/help"
-        android:title="@string/help"></item>
+        android:title="@string/help"/>
     <item android:id="@+id/exit"
-        android:title="@string/exit"></item>
+        android:title="@string/exit"/>
+    <item android:id="@+id/prayer" android:title="@string/prayers"
+        android:icon="@mipmap/pray2" app:showAsAction="always"/>
+    <item android:id="@+id/song" android:title="@string/songs"
+        android:icon="@mipmap/music2" app:showAsAction="always"/>
 </menu>
