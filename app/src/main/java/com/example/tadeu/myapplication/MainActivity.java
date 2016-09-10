@@ -10,6 +10,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 
+import android.net.Uri;
 import android.provider.AlarmClock;
 import android.provider.Settings;
 import android.support.v7.app.AlertDialog;
@@ -112,15 +113,16 @@ public class MainActivity extends AppCompatActivity {
             connDialog().show();
         }
         else {
-            Intent calendarIntent = new Intent();
+            /*Intent calendarIntent = new Intent();
             ComponentName componentName = new ComponentName("com.google.android.calendar", "com.android.calendar.LaunchActivity");
-            calendarIntent.setComponent(componentName);
+            calendarIntent.setComponent(componentName);*/
             try {
                 InsertEvents.insertEvents(this);
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            startActivity(calendarIntent);
+            //startActivity(calendarIntent);
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("content://com.android.calendar/time/")));
         }
     }
 
@@ -186,10 +188,11 @@ public class MainActivity extends AppCompatActivity {
         build.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Intent calendarIntent = new Intent();
+                /*Intent calendarIntent = new Intent();
                 ComponentName componentName = new ComponentName("com.google.android.calendar", "com.android.calendar.LaunchActivity");
-                calendarIntent.setComponent(componentName);
-                startActivity(calendarIntent);
+                calendarIntent.setComponent(componentName);*/
+                //startActivity(calendarIntent);
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("content://com.android.calendar/time/")));
             }
         });
         build.setNegativeButton(R.string.definitions, new DialogInterface.OnClickListener(){
