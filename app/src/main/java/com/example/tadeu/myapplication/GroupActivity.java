@@ -1,29 +1,14 @@
 package com.example.tadeu.myapplication;
 
 import android.content.Context;
-import android.content.res.AssetManager;
-import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.net.Uri;
-import android.provider.ContactsContract;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.Layout;
-import android.util.Log;
-import android.view.Display;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
+import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
 
@@ -51,6 +36,15 @@ public class GroupActivity extends MainActivity {
         mContext=this;
         mViewFlipper = (ViewFlipper) this.findViewById(R.id.view_flipper);
 
+
+        final ImageButton imgBtn = (ImageButton) findViewById(R.id.playGroup);
+        imgBtn.setBackgroundResource(R.mipmap.pause);
+        imgBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                imgBtn(v, imgBtn);
+            }
+        });
 
         ImageView image = (ImageView) this.findViewById(R.id.image);
         Glide.with(this).load(gallery[0]).into(image);
@@ -87,6 +81,31 @@ public class GroupActivity extends MainActivity {
         mViewFlipper.setInAnimation(mContext, R.anim.left_in);
         mViewFlipper.setOutAnimation(mContext, R.anim.left_out);
         mViewFlipper.startFlipping();
+    }
+
+
+    public void imgBtn(View v, final ImageButton imgBtn){
+        //mViewFlipper.setAutoStart(false);
+        mViewFlipper.stopFlipping();
+        imgBtn.setBackgroundResource(R.mipmap.play);
+        imgBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                playBtn(v, imgBtn);
+            }
+        });
+    }
+
+    public void playBtn(View v, final ImageButton button){
+        button.setBackgroundResource(R.mipmap.pause);
+        mViewFlipper.startFlipping();
+        mViewFlipper.showNext();
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                imgBtn(v, button);
+            }
+        });
     }
 
     class SwipeGestureDetector extends GestureDetector.SimpleOnGestureListener {

@@ -14,9 +14,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-/**
- * Created by Tadeu on 06/09/2016.
- */
 public class SongActivity extends MainActivity {
 
     private String songs[] = {"Ninguém te ama como eu", "Onde Deus te levar"};

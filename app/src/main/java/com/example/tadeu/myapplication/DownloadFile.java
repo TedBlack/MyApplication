@@ -3,16 +3,13 @@ package com.example.tadeu.myapplication;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.StrictMode;
-import android.util.Log;
 
-import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.Calendar;
 
 public class DownloadFile extends AsyncTask<String, Integer, String> {
 
@@ -31,14 +28,6 @@ public class DownloadFile extends AsyncTask<String, Integer, String> {
         }
 
         String filename = "calendar.ics";
-        //String filename = "irule.ics";
-        File aux = new File(context.getFilesDir() + "calendar.ics");
-        //File aux = new File(context.getFilesDir()+filename);
-        /*try {
-            aux.createNewFile();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }*/
 
         InputStream input = null;
         OutputStream output = null;
@@ -55,16 +44,10 @@ public class DownloadFile extends AsyncTask<String, Integer, String> {
                         + " " + connection.getResponseMessage();
             }
 
-            // this will be useful to display download percentage
-            // might be -1: server did not report the length
-            int fileLength = connection.getContentLength();
-
-            // download the file
             input = connection.getInputStream();
             output = new FileOutputStream(context.getFilesDir() + filename);
 
             byte data[] = new byte[4096];
-            long total = 0;
             int count;
             while ((count = input.read(data)) != -1) {
                 output.write(data, 0, count);

@@ -16,12 +16,8 @@ import java.io.InputStreamReader;
 import java.util.Calendar;
 import java.util.Date;
 
-/**
- * Created by Tadeu on 07/09/2016.
- */
 public class StartService extends Service{
 
-    private Looper looper;
     private ServiceHandler service;
     private Context context;
 
@@ -39,7 +35,7 @@ public class StartService extends Service{
 
         thread.start();
 
-        looper = thread.getLooper();
+        Looper looper = thread.getLooper();
         service = new ServiceHandler(looper);
 
     }
@@ -112,7 +108,7 @@ public class StartService extends Service{
 
             notification.setContentIntent(pendIntent);
 
-            NotificationManager manager = (NotificationManager) getSystemService(context.NOTIFICATION_SERVICE);
+            NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
             manager.notify(1, notification.build());
         }
     }

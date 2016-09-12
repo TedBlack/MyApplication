@@ -14,20 +14,14 @@ import android.provider.CalendarContract;
 import android.support.v4.app.ActivityCompat;
 
 import net.fortuna.ical4j.data.CalendarBuilder;
-import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.TimeZone;
 import net.fortuna.ical4j.model.TimeZoneRegistry;
-import net.fortuna.ical4j.model.property.Method;
 
 import java.io.FileInputStream;
-import java.net.URI;
 import java.text.SimpleDateFormat;
 import java.util.Iterator;
 
-/**
- * Created by Tadeu on 07/09/2016.
- */
 public class InsertEvents {
 
     private static final SimpleDateFormat SDF = new SimpleDateFormat("yyyyMMdd");
@@ -46,7 +40,6 @@ public class InsertEvents {
         net.fortuna.ical4j.model.Calendar calendar = builder.build(calendarFile);
 
         TimeZoneRegistry registry = builder.getRegistry();
-        TimeZone timeZone = registry.getTimeZone("Europe/Lisbon");
 
         ContentValues event = new ContentValues();
         ContentResolver cr = context.getContentResolver();
@@ -59,6 +52,7 @@ public class InsertEvents {
             Long end = SDF.parse(component.getProperty("DTEND").getValue()).getTime();
             String summary = component.getProperty("SUMMARY").getValue();
             String description = component.getProperty("DESCRIPTION").getValue();
+            String location = component.getProperty("LOCATION").getValue();
             String UID = component.getProperty("UID").getValue();
 
             event.put("calendar_id", 1);
@@ -66,6 +60,9 @@ public class InsertEvents {
             event.put("dtstart", start);
             event.put("dtend", end);
             event.put("description", description);
+            if(location!=null){
+                event.put(CalendarContract.Events.EVENT_LOCATION, location);
+            }
             event.put(CalendarContract.Events.EVENT_TIMEZONE, TimeZone.getDefault().getID());
             event.put(CalendarContract.Events.UID_2445, UID);
             event.put(CalendarContract.Events.ALL_DAY, true);
@@ -73,13 +70,6 @@ public class InsertEvents {
             Uri uri;
 
             if (ActivityCompat.checkSelfPermission(context, Manifest.permission.WRITE_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
-                // TODO: Consider calling
-                //    ActivityCompat#requestPermissions
-                // here to request the missing permissions, and then overriding
-                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                //                                          int[] grantResults)
-                // to handle the case where the user grants the permission. See the documentation
-                // for ActivityCompat#requestPermissions for more details.
                 return;
             }
 
@@ -97,7 +87,7 @@ public class InsertEvents {
             ContentValues reminders = new ContentValues();
             reminders.put(CalendarContract.Reminders.EVENT_ID, eventId);
             reminders.put(CalendarContract.Reminders.METHOD, CalendarContract.Reminders.METHOD_ALERT);
-            reminders.put(CalendarContract.Reminders.MINUTES,5760-60*12);
+            reminders.put(CalendarContract.Reminders.MINUTES,5760-60*20);
 
             cr.insert(CalendarContract.Reminders.CONTENT_URI, reminders);
         }

@@ -1,6 +1,5 @@
 package com.example.tadeu.myapplication;
 
-import android.app.ActionBar;
 import android.app.ActivityManager;
 import android.app.AlarmManager;
 import android.app.Dialog;
@@ -11,24 +10,20 @@ import android.content.DialogInterface;
 import android.content.Intent;
 
 import android.net.Uri;
-import android.provider.AlarmClock;
 import android.provider.Settings;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 
 
 public class MainActivity extends AppCompatActivity {
 
 
-    private AlarmManager manager;
     private PendingIntent intent;
 
     @Override
@@ -42,14 +37,13 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         Intent alarmIntent = new Intent(this, BootStart.class);
-        intent = PendingIntent.getBroadcast(this, 1, alarmIntent, 0);
+        intent = PendingIntent.getBroadcast(this.getApplicationContext(), 1, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         boolean notStarted = true;
         ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
         for(ActivityManager.RunningServiceInfo service: manager.getRunningServices(Integer.MAX_VALUE)) {
             if (StartService.class.getName().equals(service.service.getClassName())) {
                 notStarted = false;
-                //startService(new Intent(this, StartService.class));
             }
         }
         if(notStarted) {
@@ -57,14 +51,8 @@ public class MainActivity extends AppCompatActivity {
             startAlarm();
         }
 
-        /*Intent alarmIntent = new Intent(this, BootStart.class);
-        alarmIntent.putExtra("alarm", "alarm");
-        intent = PendingIntent.getBroadcast(this, 1, alarmIntent, 0);
-        */
-
-
-
         ImageButton myButton = (ImageButton) findViewById(R.id.button);
+        assert myButton != null;
         myButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -73,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         final ImageButton eventButton = (ImageButton) findViewById(R.id.events);
+        assert eventButton != null;
         eventButton.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
                 eventButton(v);
@@ -80,6 +69,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         final ImageButton groupButton = (ImageButton) findViewById(R.id.group);
+        assert groupButton != null;
         groupButton.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
                 groupButton(v);
@@ -87,6 +77,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         final ImageButton seedButton = (ImageButton) findViewById(R.id.seed);
+        assert seedButton != null;
         seedButton.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
                 seedButton(v);
@@ -95,10 +86,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void startAlarm() {
-        manager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+        AlarmManager manager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         long interval = 1000 * 60 * 60 * 24 * 15;
-        //long interval = 10000;
-        Log.i("Interval", Long.toString(interval));
         manager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), interval, intent);
     }
 
@@ -113,15 +102,11 @@ public class MainActivity extends AppCompatActivity {
             connDialog().show();
         }
         else {
-            /*Intent calendarIntent = new Intent();
-            ComponentName componentName = new ComponentName("com.google.android.calendar", "com.android.calendar.LaunchActivity");
-            calendarIntent.setComponent(componentName);*/
             try {
                 InsertEvents.insertEvents(this);
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            //startActivity(calendarIntent);
             startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("content://com.android.calendar/time/")));
         }
     }

@@ -5,18 +5,12 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.ViewGroup;
-import android.widget.ActionMenuView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-/**
- * Created by Tadeu on 09/09/2016.
- */
 public class SongDisplay extends MainActivity {
 
     protected void onCreate(Bundle bundle){
