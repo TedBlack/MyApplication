@@ -47,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         if(notStarted) {
+            StartService.timestamp = System.currentTimeMillis();
             startService(new Intent(this, StartService.class));
             startAlarm();
         }
@@ -88,6 +89,7 @@ public class MainActivity extends AppCompatActivity {
     public void startAlarm() {
         AlarmManager manager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         long interval = 1000 * 60 * 60 * 24 * 15;
+        //long interval = 60000;
         manager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), interval, intent);
     }
 

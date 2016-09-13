@@ -11,15 +11,22 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.util.Calendar;
 import java.util.Date;
 
 public class StartService extends Service{
-
+    public static long timestamp=System.currentTimeMillis();
     private ServiceHandler service;
     private Context context;
+
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -55,7 +62,6 @@ public class StartService extends Service{
         public ServiceHandler(Looper looper) {
                 super(looper);
         }
-
         @Override
         public void handleMessage(Message msg) {
             // Well calling mServiceHandler.sendMessage(message); from onStartCommand,
@@ -75,6 +81,9 @@ public class StartService extends Service{
             cal.setTime(date);
             int month = cal.get(Calendar.MONTH);
             int lineCounter = 0;
+
+
+
 
             BufferedReader reader = null;
             try {
@@ -109,7 +118,12 @@ public class StartService extends Service{
             notification.setContentIntent(pendIntent);
 
             NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-            manager.notify(1, notification.build());
+            Log.i("Time", "Time stamp "+ (System.currentTimeMillis()-timestamp));
+            if ((System.currentTimeMillis()-timestamp) >= (1000 * 60 * 60 * 24 * 15)) {
+                timestamp = System.currentTimeMillis();
+                manager.notify(1, notification.build());
+            }
+
         }
     }
 
@@ -117,4 +131,5 @@ public class StartService extends Service{
         boolean useWhiteIcon = (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP);
         return useWhiteIcon ? R.mipmap.icon2 : R.mipmap.icon;
     }
+
 }
