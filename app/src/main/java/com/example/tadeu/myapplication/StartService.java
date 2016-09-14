@@ -11,14 +11,8 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -69,7 +63,9 @@ public class StartService extends Service{
 
             if(InsertEvents.verifyCon(context)){
                 try {
-                    InsertEvents.insertEvents(context);
+                    if(MainActivity.activated) {
+                        InsertEvents.insertEvents(context);
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -118,7 +114,7 @@ public class StartService extends Service{
             notification.setContentIntent(pendIntent);
 
             NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-            Log.i("Time", "Time stamp "+ (System.currentTimeMillis()-timestamp));
+            //Log.i("Time", "Time stamp "+ (System.currentTimeMillis()-timestamp));
             if ((System.currentTimeMillis()-timestamp) >= (1000 * 60 * 60 * 24 * 15)) {
                 timestamp = System.currentTimeMillis();
                 manager.notify(1, notification.build());

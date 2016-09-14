@@ -16,7 +16,10 @@ import android.widget.TextView;
 
 public class SongActivity extends MainActivity {
 
-    private String songs[] = {"Ninguém te ama como eu", "Onde Deus te levar"};
+    private String songs[] = {"Ninguém te ama como eu", "Onde Deus te levar", "À Tua palavra (eu quero ser a luz)","Faz o que Deus espera de ti",
+                            "Pedacinho de Deus", "Deixa Deus entrar", "Confiarei (O Senhor é meu pastor)", "É o meu corpo", "És a minha vida",
+                            "Como o Pai me amou", "Maravilhas fez em mim", "Nada nos separará", "Não tenhas medo", "Deixa Deus entrar",
+                            "Deus de amor (Amor tão grande)", "Fica junto a nós"};
 
     protected void onCreate(Bundle bundle){
         super.onCreate(bundle);
@@ -49,6 +52,7 @@ public class SongActivity extends MainActivity {
             button.setGravity(Gravity.START);
             button.setTextSize(20);
             button.setId(song);
+            button.setTransformationMethod(null);
             button.setBackgroundResource(R.color.transparent);
             final int songId = song+1;
             button.setOnClickListener(new View.OnClickListener() {

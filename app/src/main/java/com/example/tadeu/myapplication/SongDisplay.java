@@ -22,19 +22,21 @@ public class SongDisplay extends MainActivity {
         String text = intent.getStringExtra("song")+".txt";
 
         TextView textView = (TextView) this.findViewById(R.id.textSong);
-
         BufferedReader reader = null;
         try {
             reader = new BufferedReader(new InputStreamReader(getAssets().open(text)));
             String line;
             while ((line = reader.readLine())!=null){
+                Log.i("line", line.length()+" "+line);
                 textView.append(line+"\n");
+                //Log.i("line", textView.getText().length()+" "+textView.getText().toString());
             }
         }
         catch (IOException error){
             Log.i("Error1", "No file to read");
         }
         finally {
+            textView.append("Isto\t\t\te\t\tum\t\tteste");
             if(reader != null){
                 try{
                     reader.close();

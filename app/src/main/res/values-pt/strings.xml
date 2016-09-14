@@ -14,4 +14,6 @@
     <string name="definitions">Definições</string>
     <string name="prayers">Orações</string>
     <string name="songs">Canções</string>
+    <string name="activate">Activar</string>
+    <string name="activateText">Insira a password para activar a aplicação.</string>
 </resources>

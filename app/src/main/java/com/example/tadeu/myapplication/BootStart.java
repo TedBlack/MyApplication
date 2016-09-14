@@ -28,19 +28,8 @@ public class BootStart extends BroadcastReceiver {
         context.startActivity(i);
         */
         /***** For start Service  ****/
-
         Intent myIntent = new Intent(context, StartService.class);
         context.startService(myIntent);
 
-        //Intent myIntent = new Intent(context, StartService.class);
-      /*  PendingIntent pIntent = PendingIntent.getBroadcast(context, 1, myIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        AlarmManager manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        //long interval = 1000 * 60 * 60 * 24 * 15;
-        long interval = 30000;
-
-        //Log.i("Interval do serviço", Long.toString(interval)+" "+System.currentTimeMillis());
-        manager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, System.currentTimeMillis(), interval, pIntent);
-*/        //context.startService(myIntent);
     }
 }

@@ -85,7 +85,6 @@ public class GroupActivity extends MainActivity {
 
 
     public void imgBtn(View v, final ImageButton imgBtn){
-        //mViewFlipper.setAutoStart(false);
         mViewFlipper.stopFlipping();
         imgBtn.setBackgroundResource(R.mipmap.play);
         imgBtn.setOnClickListener(new View.OnClickListener() {

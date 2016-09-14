@@ -10,8 +10,10 @@ import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.provider.CalendarContract;
 import android.support.v4.app.ActivityCompat;
+import android.util.Log;
 
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.model.Component;
@@ -21,14 +23,16 @@ import net.fortuna.ical4j.model.TimeZoneRegistry;
 import java.io.FileInputStream;
 import java.text.SimpleDateFormat;
 import java.util.Iterator;
+import java.util.concurrent.Executor;
 
 public class InsertEvents {
 
     private static final SimpleDateFormat SDF = new SimpleDateFormat("yyyyMMdd");
+    public static String website = "https://calendar.google.com/calendar/ical/ijuh72fq0otnvo5edesmj72" +
+            "fag%40group.calendar.google.com/public/basic.ics";
+
 
     public static void insertEvents(Context context) throws Exception {
-        String website = "https://calendar.google.com/calendar/ical/ijuh72fq0otnvo5edesmj72" +
-                "fag%40group.calendar.google.com/public/basic.ics";
 
         DownloadFile dlFile = new DownloadFile(context);
 
@@ -38,8 +42,6 @@ public class InsertEvents {
         FileInputStream calendarFile = new FileInputStream(context.getFilesDir() + "calendar.ics");
         CalendarBuilder builder = new CalendarBuilder();
         net.fortuna.ical4j.model.Calendar calendar = builder.build(calendarFile);
-
-        TimeZoneRegistry registry = builder.getRegistry();
 
         ContentValues event = new ContentValues();
         ContentResolver cr = context.getContentResolver();
@@ -121,5 +123,4 @@ public class InsertEvents {
         cursor.close();
         return false;
     }
-
 }

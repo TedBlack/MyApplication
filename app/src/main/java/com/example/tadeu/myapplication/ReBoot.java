@@ -17,7 +17,8 @@ public class ReBoot extends BroadcastReceiver{
 
             AlarmManager manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
             long interval = 1000 * 60 * 60 * 24 * 15;
-            StartService.timestamp = System.currentTimeMillis();
+            //long interval = 10000;
+            StartService.timestamp = 0;
             //Log.i("Interval do serviço", Long.toString(interval)+" "+System.currentTimeMillis());
             manager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), interval, pendingIntent);
             context.startService(alarmIntent);

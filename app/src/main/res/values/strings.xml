@@ -14,4 +14,6 @@
     <string name="definitions">Definitions</string>
     <string name="prayers">Prayers</string>
     <string name="songs">Songs</string>
+    <string name="activate">Activate</string>
+    <string name="activateText">Insert password to activate the application</string>
 </resources>

@@ -11,20 +11,26 @@ import android.content.Intent;
 
 import android.net.Uri;
 import android.provider.Settings;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.method.PasswordTransformationMethod;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.Toast;
 
 
 public class MainActivity extends AppCompatActivity {
 
-
     private PendingIntent intent;
+    private Context context = this;
+    protected static boolean activated=false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         if(notStarted) {
-            StartService.timestamp = System.currentTimeMillis();
+            StartService.timestamp = 0;
             startService(new Intent(this, StartService.class));
             startAlarm();
         }
@@ -89,7 +95,6 @@ public class MainActivity extends AppCompatActivity {
     public void startAlarm() {
         AlarmManager manager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         long interval = 1000 * 60 * 60 * 24 * 15;
-        //long interval = 60000;
         manager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), interval, intent);
     }
 
@@ -105,13 +110,25 @@ public class MainActivity extends AppCompatActivity {
         }
         else {
             try {
-                InsertEvents.insertEvents(this);
+                if (activated) {
+                    Thread thread = new Thread(){
+                      public void run(){
+                          try {
+                              InsertEvents.insertEvents(context);
+                          } catch (Exception e) {
+                              e.printStackTrace();
+                          }
+                      }
+                    };
+                    thread.start();
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
             startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("content://com.android.calendar/time/")));
         }
     }
+
 
     public void groupButton(View view){
         Intent intent = new Intent(this, GroupActivity.class);
@@ -150,9 +167,21 @@ public class MainActivity extends AppCompatActivity {
             case R.id.song:
                 startActivity(new Intent(getApplicationContext(), SongActivity.class));
                 return true;
+            case R.id.activate:
+                activateDialog().show();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    public boolean onPrepareOptionsMenu(Menu menu){
+        MenuItem item = menu.findItem(R.id.activate);
+        if(activated){
+            item.setTitle("Activado");
+            item.setEnabled(false);
+        }
+        return true;
     }
 
     public Dialog aboutDialog(){
@@ -175,10 +204,6 @@ public class MainActivity extends AppCompatActivity {
         build.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                /*Intent calendarIntent = new Intent();
-                ComponentName componentName = new ComponentName("com.google.android.calendar", "com.android.calendar.LaunchActivity");
-                calendarIntent.setComponent(componentName);*/
-                //startActivity(calendarIntent);
                 startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("content://com.android.calendar/time/")));
             }
         });
@@ -197,12 +222,48 @@ public class MainActivity extends AppCompatActivity {
         build.setNeutralButton("Ok", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Intent calendarIntent = new Intent();
-                ComponentName componentName = new ComponentName("com.google.android.calendar", "com.android.calendar.LaunchActivity");
-                calendarIntent.setComponent(componentName);
-                startActivity(calendarIntent);
+
             }
         });
+        return build.create();
+    }
+
+    public Dialog activateDialog(){
+        AlertDialog.Builder build = new AlertDialog.Builder(this);
+        build.setTitle(R.string.activate);
+        build.setMessage(R.string.activateText);
+        final EditText input = new EditText(MainActivity.this);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(20,20);
+        input.setLayoutParams(lp);
+        input.setTransformationMethod(PasswordTransformationMethod.getInstance());
+        build.setView(input);
+
+        build.setPositiveButton("Seguinte", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String pass = input.getText().toString();
+                if(pass.equals("job15anos")){
+                    activated=true;
+                    Toast.makeText(context, "Aplicação ativada", Toast.LENGTH_SHORT).show();
+                }
+                else if(pass.equals("job2001")){
+                    activated=true;
+                    InsertEvents.website = "https://calendar.google.com/calendar/ical/co5iu26ul8hul9uf80eb06i7ug%40group.calendar.google.com/public/basic.ics";
+                    Toast.makeText(context, "Aplicação ativada", Toast.LENGTH_SHORT).show();
+                }
+                else if(pass.equals("publico")){
+                    activated=true;
+                    InsertEvents.website = "https://calendar.google.com/calendar/ical/fhumd1cok7d3lblugh2jh541cs%40group.calendar.google.com/public/basic.ics";
+                    Toast.makeText(context, "Aplicação ativada", Toast.LENGTH_SHORT).show();
+                }
+                else{
+                    Toast.makeText(context, "Password errada", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        build.setNeutralButton("Cancel", null);
+
         return build.create();
     }
 }
