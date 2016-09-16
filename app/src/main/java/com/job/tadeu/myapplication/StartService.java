@@ -1,4 +1,4 @@
-package com.example.tadeu.myapplication;
+package com.job.tadeu.myapplication;
 
 import android.app.NotificationManager;
 import android.app.PendingIntent;

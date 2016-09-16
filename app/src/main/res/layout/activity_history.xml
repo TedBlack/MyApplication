@@ -19,7 +19,8 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:id="@+id/firstGroup"
-            android:src="@mipmap/text"/>
+            android:src="@mipmap/text"
+            android:scaleType="fitCenter"/>
         <TextView
             android:layout_below="@+id/firstGroup"
             android:id="@+id/historyText"

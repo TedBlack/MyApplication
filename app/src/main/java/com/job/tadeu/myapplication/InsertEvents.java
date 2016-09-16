@@ -1,4 +1,4 @@
-package com.example.tadeu.myapplication;
+package com.job.tadeu.myapplication;
 
 import android.Manifest;
 import android.content.ContentResolver;
@@ -10,20 +10,16 @@ import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.provider.CalendarContract;
 import android.support.v4.app.ActivityCompat;
-import android.util.Log;
 
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.TimeZone;
-import net.fortuna.ical4j.model.TimeZoneRegistry;
 
 import java.io.FileInputStream;
 import java.text.SimpleDateFormat;
 import java.util.Iterator;
-import java.util.concurrent.Executor;
 
 public class InsertEvents {
 

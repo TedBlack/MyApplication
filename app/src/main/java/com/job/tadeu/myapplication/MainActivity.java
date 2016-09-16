@@ -1,17 +1,15 @@
-package com.example.tadeu.myapplication;
+package com.job.tadeu.myapplication;
 
 import android.app.ActivityManager;
 import android.app.AlarmManager;
 import android.app.Dialog;
 import android.app.PendingIntent;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 
 import android.net.Uri;
 import android.provider.Settings;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -20,6 +18,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -188,6 +187,7 @@ public class MainActivity extends AppCompatActivity {
         AlertDialog.Builder build = new AlertDialog.Builder(this);
         build.setTitle(R.string.about);
         build.setMessage(R.string.aboutText);
+        build.setIcon(R.mipmap.bear);
         build.setNeutralButton("Ok", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -233,7 +233,8 @@ public class MainActivity extends AppCompatActivity {
         build.setTitle(R.string.activate);
         build.setMessage(R.string.activateText);
         final EditText input = new EditText(MainActivity.this);
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(20,20);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,20);
+
         input.setLayoutParams(lp);
         input.setTransformationMethod(PasswordTransformationMethod.getInstance());
         build.setView(input);

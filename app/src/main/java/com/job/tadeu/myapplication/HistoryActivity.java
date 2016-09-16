@@ -1,4 +1,4 @@
-package com.example.tadeu.myapplication;
+package com.job.tadeu.myapplication;
 
 import android.os.Bundle;
 import android.util.Log;
