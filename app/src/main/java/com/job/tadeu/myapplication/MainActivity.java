@@ -1,5 +1,6 @@
 package com.job.tadeu.myapplication;
 
+import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.AlarmManager;
 import android.app.Dialog;
@@ -8,7 +9,10 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 
+import android.content.SharedPreferences;
 import android.net.Uri;
+import android.preference.Preference;
+import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -29,7 +33,6 @@ public class MainActivity extends AppCompatActivity {
 
     private PendingIntent intent;
     private Context context = this;
-    protected static boolean activated=false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +40,8 @@ public class MainActivity extends AppCompatActivity {
         if (getIntent().getBooleanExtra("EXIT", false)) {
             finish();
         }
+
+        //setDefaults("activated", false, this);
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -91,6 +96,18 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    public static void setDefaults(String key, boolean value, Context context) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putBoolean(key, value);
+        editor.commit();
+    }
+
+    public static boolean getDefaults(String key, Context context) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        return preferences.getBoolean(key, false);
+    }
+
     public void startAlarm() {
         AlarmManager manager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         long interval = 1000 * 60 * 60 * 24 * 15;
@@ -109,6 +126,7 @@ public class MainActivity extends AppCompatActivity {
         }
         else {
             try {
+                boolean activated = getDefaults("activated", this);
                 if (activated) {
                     Thread thread = new Thread(){
                       public void run(){
@@ -176,9 +194,11 @@ public class MainActivity extends AppCompatActivity {
 
     public boolean onPrepareOptionsMenu(Menu menu){
         MenuItem item = menu.findItem(R.id.activate);
+        boolean activated = getDefaults("activated", this);
         if(activated){
             item.setTitle("Activado");
             item.setEnabled(false);
+            item.setVisible(false);
         }
         return true;
     }
@@ -244,16 +264,16 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int which) {
                 String pass = input.getText().toString();
                 if(pass.equals("job15anos")){
-                    activated=true;
+                    setDefaults("activated", true, context);
                     Toast.makeText(context, "Aplicação ativada", Toast.LENGTH_SHORT).show();
                 }
                 else if(pass.equals("job2001")){
-                    activated=true;
+                    setDefaults("activated", true, context);
                     InsertEvents.website = "https://calendar.google.com/calendar/ical/co5iu26ul8hul9uf80eb06i7ug%40group.calendar.google.com/public/basic.ics";
                     Toast.makeText(context, "Aplicação ativada", Toast.LENGTH_SHORT).show();
                 }
                 else if(pass.equals("publico")){
-                    activated=true;
+                    setDefaults("activated", true, context);
                     InsertEvents.website = "https://calendar.google.com/calendar/ical/fhumd1cok7d3lblugh2jh541cs%40group.calendar.google.com/public/basic.ics";
                     Toast.makeText(context, "Aplicação ativada", Toast.LENGTH_SHORT).show();
                 }

@@ -63,7 +63,8 @@ public class StartService extends Service{
 
             if(InsertEvents.verifyCon(context)){
                 try {
-                    if(MainActivity.activated) {
+                    boolean activated = MainActivity.getDefaults("activated", context);
+                    if(activated) {
                         InsertEvents.insertEvents(context);
                     }
                 } catch (Exception e) {
