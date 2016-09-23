@@ -63,7 +63,7 @@ public class InsertEvents {
             }
             event.put(CalendarContract.Events.EVENT_TIMEZONE, TimeZone.getDefault().getID());
             event.put(CalendarContract.Events.UID_2445, UID);
-            event.put(CalendarContract.Events.ALL_DAY, true);
+            //event.put(CalendarContract.Events.ALL_DAY, true);
             event.put(CalendarContract.Events.HAS_ALARM, true);
             Uri uri;
 

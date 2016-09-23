@@ -36,7 +36,6 @@ public class SongDisplay extends MainActivity {
             Log.i("Error1", "No file to read");
         }
         finally {
-            textView.append("Isto\t\t\te\t\tum\t\tteste");
             if(reader != null){
                 try{
                     reader.close();

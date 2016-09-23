@@ -8,8 +8,8 @@ android {
         applicationId "com.job.tadeu.myapplication"
         minSdkVersion 15
         targetSdkVersion 23
-        versionCode 3
-        versionName "1.2"
+        versionCode 7
+        versionName "1.2.4"
     }
     buildTypes {
         release {
@@ -25,4 +25,6 @@ dependencies {
     compile 'com.android.support:appcompat-v7:23.4.0'
     compile 'com.github.bumptech.glide:glide:3.7.0'
     compile 'ical4j:ical4j:0.9.20'
+    compile 'com.google.api.client:google-api-data-picasa-v2:1.0.10-alpha'
+    compile 'com.google.api.client:google-api-data-picasa-v2-atom:1.0.10-alpha'
 }

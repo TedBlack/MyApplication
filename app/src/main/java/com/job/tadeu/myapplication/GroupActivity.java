@@ -24,10 +24,10 @@ public class GroupActivity extends MainActivity {
 
     private final int gallery [] = {R.drawable.cesar, R.drawable.jessica, R.drawable.joao, R.drawable.tadeu, R.drawable.pedro, R.drawable.diogo,
                                     R.drawable.annie, R.drawable.rita, R.drawable.patricia, R.drawable.sam, R.drawable.sara, R.drawable.cristina,
-                                    R.drawable.alexandre, R.drawable.leonel};
+                                    R.drawable.alexandre, R.drawable.leonel, R.drawable.diana};
     private final String subtitles [] ={"César Freitas", "Jéssica Teixeira", "João Abreu", "Tadeu Freitas", "Pedro Carvalho", "Diogo Pereira",
                                         "Annie Martins", "Rita Pereira", "Patricia Fernandes", "Samuel Fernandes", "Sara Silva", "Cristina Salgado",
-                                        "Alexandre Ribeiro", "Leonel Gomes"};
+                                        "Alexandre Ribeiro", "Leonel Gomes", "Diana Henriques"};
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

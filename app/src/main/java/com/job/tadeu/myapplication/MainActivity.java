@@ -18,6 +18,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.method.PasswordTransformationMethod;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -28,12 +29,14 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import java.util.Set;
+
 
 public class MainActivity extends AppCompatActivity {
 
     private PendingIntent intent;
     private Context context = this;
-
+    private Thread thread;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -103,6 +106,17 @@ public class MainActivity extends AppCompatActivity {
         editor.commit();
     }
 
+    protected void onDestroy(){
+        if(thread!=null){
+            try {
+                thread.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        super.onDestroy();
+    }
+
     public static boolean getDefaults(String key, Context context) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         return preferences.getBoolean(key, false);
@@ -111,6 +125,7 @@ public class MainActivity extends AppCompatActivity {
     public void startAlarm() {
         AlarmManager manager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         long interval = 1000 * 60 * 60 * 24 * 15;
+        //long interval = 10000;
         manager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), interval, intent);
     }
 
@@ -120,15 +135,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void eventButton(View view) {
-
         if(!InsertEvents.verifyCon(this)){
             connDialog().show();
         }
         else {
             try {
                 boolean activated = getDefaults("activated", this);
-                if (activated) {
-                    Thread thread = new Thread(){
+                if (activated && !thread.isAlive() && !getThreadByName("events")) {
+                    thread = new Thread(){
                       public void run(){
                           try {
                               InsertEvents.insertEvents(context);
@@ -137,13 +151,28 @@ public class MainActivity extends AppCompatActivity {
                           }
                       }
                     };
+                    thread.setName("events");
                     thread.start();
                 }
+
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
             startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("content://com.android.calendar/time/")));
         }
+    }
+
+    public boolean getThreadByName(String threadName) {
+
+        Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
+        Thread[] threadArray = threadSet.toArray(new Thread[threadSet.size()]);
+
+        for (int i = 0; i < threadArray.length; i++) {
+            if (threadArray[i].getName().equals(threadName))
+                return true;
+        }
+        return false;
     }
 
 
